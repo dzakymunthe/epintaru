@@ -12,6 +12,11 @@
 <meta name="description" content="Media informasi pelayanan Tata Ruang Bidang Penataan Ruang, Dinas PUPR Kabupaten Bireuen."/>
 <link rel="shortcut icon" href="images/e-pintaru-logo.png"/>
 <link rel="icon" href="images/e-pintaru-logo.png"/>
+<script>
+if (window.self !== window.top) {
+  document.documentElement.classList.add("is-embedded");
+}
+</script>
 <script src="js/site.js" defer></script>
 </head>
 <style id="embedded-scroll-fix">
@@ -38,6 +43,13 @@ main {
 }
 section[id] {
   scroll-margin-top: 82px;
+}
+html.is-embedded .navbar {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  width: 100% !important;
 }
 .contact-box > iframe {
   display: block !important;
