@@ -680,6 +680,27 @@ section[id] {
 </main>
 <script>
 (function () {
+  /* Navigasi internal tanpa mengubah hash URL di dalam iframe Google Sites. */
+  document.addEventListener("click", function (event) {
+    var link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    var targetId = link.getAttribute("href").slice(1);
+    if (!targetId) return;
+
+    var target = document.getElementById(targetId);
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    var nav = document.querySelector(".navbar nav");
+    if (nav) nav.classList.remove("active");
+  });
+})();
+</script>
+<script>
+(function () {
   function normalText(element) {
     return (element && element.textContent || "").replace(/\s+/g, " ").trim();
   }
