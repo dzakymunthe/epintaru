@@ -55,6 +55,50 @@ section[id] {
   }
 }
 </style>
+<style id="epintaru-embedded-modal-fix">
+/* Menjaga seluruh pop-up tetap berada di dalam viewport iframe Google Sites. */
+[data-ep-modal="true"] {
+  box-sizing: border-box !important;
+  max-height: calc(100vh - 24px) !important;
+  max-height: calc(100dvh - 24px) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tombol aksi selalu terlihat ketika isi pop-up digulir. */
+[data-ep-modal-footer="true"] {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 50 !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  background: #f3f8fb !important;
+  padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+}
+
+@media (max-width: 768px) {
+  [data-ep-modal="true"] {
+    width: calc(100% - 12px) !important;
+    max-width: calc(100% - 12px) !important;
+    max-height: calc(100vh - 12px) !important;
+    max-height: calc(100dvh - 12px) !important;
+    margin: 6px auto !important;
+    border-radius: 14px !important;
+  }
+
+  [data-ep-modal-footer="true"] {
+    gap: 10px !important;
+    padding: 12px 14px max(14px, env(safe-area-inset-bottom)) !important;
+  }
+
+  [data-ep-modal-footer="true"] a,
+  [data-ep-modal-footer="true"] button {
+    min-height: 44px !important;
+  }
+}
+</style>
 <body class="antialiased">
 <main>
 <header class="navbar ">
@@ -634,5 +678,62 @@ section[id] {
 <div class="copyright">© 2026 E-PINTARU – Dinas PUPR Kabupaten Bireuen</div>
 </footer>
 </main>
+<script>
+(function () {
+  function normalText(element) {
+    return (element && element.textContent || "").replace(/\s+/g, " ").trim();
+  }
+
+  function markOpenPopup() {
+    var elements = document.querySelectorAll("a, button");
+    var guideButton = null;
+    var closeButton = null;
+
+    elements.forEach(function (element) {
+      var text = normalText(element);
+      if (text.indexOf("Lihat Panduan") !== -1) guideButton = element;
+      if (text === "Tutup") closeButton = element;
+    });
+
+    if (!guideButton || !closeButton) return;
+
+    var guideAncestors = [];
+    var node = guideButton;
+    while (node && node !== document.body) {
+      guideAncestors.push(node);
+      node = node.parentElement;
+    }
+
+    var footer = guideAncestors.find(function (ancestor) {
+      return ancestor !== guideButton && ancestor.contains(closeButton);
+    });
+    if (!footer) return;
+    footer.setAttribute("data-ep-modal-footer", "true");
+
+    node = footer.parentElement;
+    while (node && node !== document.body) {
+      var style = window.getComputedStyle(node);
+      var rect = node.getBoundingClientRect();
+      var background = style.backgroundColor;
+      var visibleBackground = background && background !== "rgba(0, 0, 0, 0)" && background !== "transparent";
+
+      if (visibleBackground && rect.width > 280 && rect.height > 250) {
+        node.setAttribute("data-ep-modal", "true");
+        break;
+      }
+      node = node.parentElement;
+    }
+  }
+
+  document.addEventListener("click", function () {
+    window.setTimeout(markOpenPopup, 0);
+  });
+
+  new MutationObserver(markOpenPopup).observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+})();
+</script>
 </body>
 </html>
