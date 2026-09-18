@@ -86,11 +86,16 @@ section[id] {
     max-height: calc(100dvh - 12px) !important;
     margin: 6px auto !important;
     border-radius: 14px !important;
+    overflow-y: scroll !important;
+    overscroll-behavior-y: auto !important;
+    touch-action: pan-y !important;
   }
 
   [data-ep-modal-footer="true"] {
+    position: relative !important;
     gap: 10px !important;
     padding: 12px 14px max(14px, env(safe-area-inset-bottom)) !important;
+    touch-action: pan-y !important;
   }
 
   [data-ep-modal-footer="true"] a,
